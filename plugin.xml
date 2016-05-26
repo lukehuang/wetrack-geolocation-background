@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
-        id="wetrack-geolocation-background" version="0.1.0">
+        id="studio.wetrack.geolocation" version="0.1.0">
     <name>WetrackGeolocation</name>
     <description>Geolocation background watcher and uploader . By Wetrack Studio</description>
     <license>Apache 2.0</license>

@@ -11,14 +11,14 @@ WetrackGeolocation.prototype.error_callback = function(msg) {
 }
 // 获取当前位置
 WetrackGeolocation.prototype.getCurrentPosition = function(callback) {
-    function onSuccess = function(msg) {
+    var onSuccess = function(msg) {
         callback(JSON.parse(msg))
     }
     this.call_native("getCurrentPosition", [] , onSuccess);
 }
 // 监听位置变化
 // WetrackGeolocation.prototype.watchPosition = function(args , callback) {
-//     function onSuccess = function(msg) {
+//     var onSuccess = function(msg) {
 //         callback(JSON.parse(msg))
 //     }
 //     this.call_native("watchPosition", args , onSuccess);
