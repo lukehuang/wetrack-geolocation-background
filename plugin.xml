@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+        id="wetrack-geolocation-background" version="0.1.0">
+    <name>WetrackGeolocation</name>
+    <description>Geolocation background watcher and uploader . By Wetrack Studio</description>
+    <license>Apache 2.0</license>
+    <keywords>cordova,geolocation</keywords>
+    <js-module src="www/WetrackGeolocation.js" name="WetrackGeolocation">
+        <clobbers target="WetrackGeolocation" />
+    </js-module>
+
+    <platform name="android">
+
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="WetrackGeolocation">
+                <param name="android-package" value="studio.wetrack.geolocation.WetrackGeolocationPlugin"/>
+            </feature>
+        </config-file>
+
+        <config-file target="AndroidManifest.xml" parent="/manifest">
+            <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+            <uses-permission android:name="android.permission.INTERNET" />
+        </config-file>
+        <!-- <config-file target="AndroidManifest.xml" parent="/manifest/application">
+
+            <service
+                android:name="studio.wetrack.geolocation.GeolocationService"
+                android:enabled="true"
+                android:exported="false">
+            </service>
+
+            <receiver
+                android:name="studio.wetrack.geolocation.WakeReceiver"
+                android:enabled="true">
+                <intent-filter>
+                    <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                    <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
+                </intent-filter>
+            </receiver>
+
+        </config-file> -->
+
+        <!-- <source-file src="src/android/WakeReceiver.java" target-dir="src/studio/wetrack/geolocation"/> -->
+        <!-- <source-file src="src/android/GeolocationService.java" target-dir="src/studio/wetrack/geolocation"/> -->
+        <source-file src="src/android/GeolocationManager.java" target-dir="src/studio/wetrack/geolocation"/>
+
+    </platform>
+</plugin>
