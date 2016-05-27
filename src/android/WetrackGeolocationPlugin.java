@@ -3,8 +3,10 @@ package studio.wetrack.geolocation;
 import android.location.Location;
 import android.widget.Toast;
 
-import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CallbackContext;
+import org.apache.cordova.CordovaInterface;
+import org.apache.cordova.CordovaPlugin;
+import org.apache.cordova.CordovaWebView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -69,10 +71,10 @@ public class WetrackGeolocationPlugin extends CordovaPlugin {
         } catch (org.json.JSONException e) {
 
             callbackContext.error("error");
-            Toast.makeText(this.cordova.getActivity().getApplicationContext() , locationInfo.toString()).show(Toast.LENGTH_SHORT);
+            // Toast.makeText(this.cordova.getActivity().getApplicationContext() , locationInfo.toString() , Toast.LENGTH_SHORT).show();
         }
 
-        Toast.makeText(this.cordova.getActivity().getApplicationContext() , locationInfo.toString()).show(Toast.LENGTH_SHORT);
+        // Toast.makeText(this.cordova.getActivity().getApplicationContext() , locationInfo.toString() , Toast.LENGTH_SHORT).show();
         callbackContext.success(locationInfo.toString());
     }
 
