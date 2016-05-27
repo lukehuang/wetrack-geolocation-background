@@ -1,6 +1,7 @@
 package studio.wetrack.geolocation;
 
 import android.location.Location;
+import android.widget.Toast;
 
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CallbackContext;
@@ -54,6 +55,7 @@ public class WetrackGeolocationPlugin extends CordovaPlugin {
     }
 
     private void getCurrentPosition(CallbackContext callbackContext) {
+//        Toast.makeText(this.cordova.getActivity().getApplicationContext() , "getCurrentPosition").show(Toast.LENGTH_SHORT);
         Location location = GeolocationManager.getInstance(this.cordova.getActivity().getApplicationContext()).getLocation();
         JSONObject locationInfo = new JSONObject();
         try {
@@ -66,7 +68,11 @@ public class WetrackGeolocationPlugin extends CordovaPlugin {
             }
         } catch (org.json.JSONException e) {
 
+            callbackContext.error("error");
+            Toast.makeText(this.cordova.getActivity().getApplicationContext() , locationInfo.toString()).show(Toast.LENGTH_SHORT);
         }
+
+        Toast.makeText(this.cordova.getActivity().getApplicationContext() , locationInfo.toString()).show(Toast.LENGTH_SHORT);
         callbackContext.success(locationInfo.toString());
     }
 
