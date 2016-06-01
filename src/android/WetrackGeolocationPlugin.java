@@ -79,7 +79,7 @@ public class WetrackGeolocationPlugin extends CordovaPlugin {
         SharedPreferences.Editor iEditor = iSharedPreference.edit();
         iEditor.putBoolean(NEED_START_WATCH , true);
         iEditor.commit();
-        mConnection.setCallbackContext(callbackContext);
+        mCallbackContext = callbackContext;
         applicationContext.bindService(new Intent(applicationContext , GeolocationService.class) , mConnection , Context.BIND_AUTO_CREATE);
     }
 
@@ -93,15 +93,6 @@ public class WetrackGeolocationPlugin extends CordovaPlugin {
     }
 
     private ServiceConnection mConnection = new ServiceConnection() {
-        private CallbackContext mCallbackContext;
-
-        public CallbackContext getCallbackContext() {
-            return mCallbackContext;
-        }
-
-        public void setCallbackContext(CallbackContext callbackContext) {
-            mCallbackContext = callbackContext;
-        }
 
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
