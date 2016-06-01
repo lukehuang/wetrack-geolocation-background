@@ -92,7 +92,7 @@ public class WetrackGeolocationPlugin extends CordovaPlugin {
         applicationContext.unbindService(mConnection);
     }
 
-    private static ServiceConnection mConnection = new ServiceConnection() {
+    private ServiceConnection mConnection = new ServiceConnection() {
         private CallbackContext mCallbackContext;
 
         public CallbackContext getCallbackContext() {
