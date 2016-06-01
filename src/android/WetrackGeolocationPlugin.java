@@ -1,6 +1,13 @@
 package studio.wetrack.geolocation;
 
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.location.Location;
+import android.os.Binder;
+import android.os.IBinder;
 import android.widget.Toast;
 
 import org.apache.cordova.CallbackContext;
@@ -12,10 +19,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import studio.wetrack.geolocation.GeolocationService.GeolocationServiceBinder;
 /**
  * Created by zhonghui on 16/5/25.
  */
 public class WetrackGeolocationPlugin extends CordovaPlugin {
+    public static final String NEED_START_WATCH = "need_start_watch";
+    public static final String NEED_UPLOAD = "need_upload";
+    public static final String UPLOAD_INFO = "upload_info";
 
     public WetrackGeolocationPlugin() {
     }
@@ -46,7 +57,7 @@ public class WetrackGeolocationPlugin extends CordovaPlugin {
             return true;
         }
         if ("watchPosition".equals(action)) {
-            this.watchPosition(args , callbackContext);
+            this.watchPosition(callbackContext);
             return true;
         }
         if ("stopWatch".equals(action)) {
@@ -59,30 +70,50 @@ public class WetrackGeolocationPlugin extends CordovaPlugin {
     private void getCurrentPosition(CallbackContext callbackContext) {
 //        Toast.makeText(this.cordova.getActivity().getApplicationContext() , "getCurrentPosition").show(Toast.LENGTH_SHORT);
         Location location = GeolocationManager.getInstance(this.cordova.getActivity().getApplicationContext()).getLocation();
-        JSONObject locationInfo = new JSONObject();
-        try {
-            if(location != null) {
-                locationInfo.put("latitude" , location.getLatitude());
-                locationInfo.put("longitude" , location.getLongitude());
-            } else {
-                locationInfo.put("latitude" , 0);
-                locationInfo.put("longitude" , 0);
-            }
-        } catch (org.json.JSONException e) {
-
-            callbackContext.error("error");
-            // Toast.makeText(this.cordova.getActivity().getApplicationContext() , locationInfo.toString() , Toast.LENGTH_SHORT).show();
-        }
-
-        // Toast.makeText(this.cordova.getActivity().getApplicationContext() , locationInfo.toString() , Toast.LENGTH_SHORT).show();
-        callbackContext.success(locationInfo.toString());
+        LocationCommiter.commit(location , callbackContext , this.cordova.getActivity().getApplicationContext());
     }
 
-    private void watchPosition(JSONArray args , CallbackContext callbackContext) {
-
+    private void watchPosition(CallbackContext callbackContext) {
+        Context applicationContext = this.cordova.getActivity().getApplicationContext();
+        SharedPreferences iSharedPreference = applicationContext.getSharedPreferences(WetrackGeolocationPlugin.class.getSimpleName() , Context.MODE_PRIVATE);
+        SharedPreferences.Editor iEditor = iSharedPreference.edit();
+        iEditor.putBoolean(NEED_START_WATCH , true);
+        iEditor.commit();
+        mConnection.setCallbackContext(callbackContext);
+        applicationContext.bindService(new Intent(applicationContext , GeolocationService.class) , mConnection , Context.BIND_AUTO_CREATE);
     }
 
     private void stopWatch(CallbackContext callbackContext) {
-
+        Context applicationContext = this.cordova.getActivity().getApplicationContext();
+        SharedPreferences iSharedPreference = applicationContext.getSharedPreferences(WetrackGeolocationPlugin.class.getSimpleName() , Context.MODE_PRIVATE);
+        SharedPreferences.Editor iEditor = iSharedPreference.edit();
+        iEditor.putBoolean(NEED_START_WATCH , false);
+        iEditor.commit();
+        applicationContext.unbindService(mConnection);
     }
+
+    private static ServiceConnection mConnection = new ServiceConnection() {
+        private CallbackContext mCallbackContext;
+
+        public CallbackContext getCallbackContext() {
+            return mCallbackContext;
+        }
+
+        public void setCallbackContext(CallbackContext callbackContext) {
+            mCallbackContext = callbackContext;
+        }
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            GeolocationServiceBinder binder = (GeolocationServiceBinder) service;
+            GeolocationService binderService = binder.getService();
+            binderService.setCallbackContext(mCallbackContext);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    };
+
 }

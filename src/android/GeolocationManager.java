@@ -10,8 +10,11 @@ import android.location.LocationManager;
 import android.location.LocationProvider;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
-public class GeolocationManager implements LocationListener{
+import org.json.JSONObject;
+
+public class GeolocationManager{
     private static GeolocationManager mInstance;
     private Context mContext;
     private static LocationManager mLocationManager;
@@ -20,7 +23,7 @@ public class GeolocationManager implements LocationListener{
     private String mLocationProvider;
     private static final int SECOND = 1000;
     private static final int KM = 1000;
-    private GPSLocationListener mListener;
+    private LocationListener mListener;
 
     public interface GPSLocationListener {
         public void onLocationChanged(Location location);
@@ -32,16 +35,16 @@ public class GeolocationManager implements LocationListener{
         mLocationProvider = mLocationManager.getBestProvider(getCriteria(), true);
     }
 
-    public void initGPSListener(GPSLocationListener listener){
+    public void initGPSListener(LocationListener listener){
         Log.e(GeolocationManager.class.getSimpleName(),"initGPSListener");
         mListener = listener;
-        mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, SECOND * 30 , KM / 200 , this);
-        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, SECOND * 30 , KM / 200, this);
+        mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, SECOND * 30 , KM / 200 , listener);
+        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, SECOND * 30 , KM / 200, listener);
     }
 
     public void uninitGPSListener() {
         Log.e(GeolocationManager.class.getSimpleName(),"uninitGPSListener");
-        mLocationManager.removeUpdates(this);
+        mLocationManager.removeUpdates(mListener);
     }
 
     public static GeolocationManager getInstance(Context context){
@@ -77,34 +80,6 @@ public class GeolocationManager implements LocationListener{
             }
         }
         return bestLocation;
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        Log.e(GeolocationManager.class.getSimpleName(),"onLocationChanged");
-        mListener.onLocationChanged(location);
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-        Log.e(GeolocationManager.class.getSimpleName(),"onProviderEnabled");
-        mListener.onLocationChanged(getLocation());
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-        Log.e(GeolocationManager.class.getSimpleName(),"onProviderDisabled");
-        mListener.onLocationChanged(null);
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-        Log.e(GeolocationManager.class.getSimpleName(),"onStatusChanged");
-        if(status == LocationProvider.AVAILABLE) {
-            mListener.onLocationChanged(getLocation());
-        } else {
-            mListener.onLocationChanged(null);
-        }
     }
 
 }
