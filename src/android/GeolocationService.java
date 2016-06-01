@@ -10,6 +10,7 @@ import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import org.apache.cordova.CallbackContext;
 
@@ -54,6 +55,7 @@ public class GeolocationService extends Service implements LocationListener{
 
     @Override
     public void onLocationChanged(Location location) {
+        Log.e(GeolocationService.class.getSimpleName(),"onLocationChanged");
         LocationCommiter.commit(location , mCallbackContext , this);
     }
 

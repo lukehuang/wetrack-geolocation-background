@@ -38,8 +38,8 @@ public class GeolocationManager{
     public void initGPSListener(LocationListener listener){
         Log.e(GeolocationManager.class.getSimpleName(),"initGPSListener");
         mListener = listener;
-        mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, SECOND * 30 , KM / 200 , listener);
-        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, SECOND * 30 , KM / 200, listener);
+        mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, SECOND * 60 , KM / 200 , listener);
+        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, SECOND * 60 , KM / 200, listener);
     }
 
     public void uninitGPSListener() {
