@@ -27,6 +27,7 @@ public class WetrackGeolocationPlugin extends CordovaPlugin {
     public static final String NEED_START_WATCH = "need_start_watch";
     public static final String NEED_UPLOAD = "need_upload";
     public static final String UPLOAD_INFO = "upload_info";
+    private CallbackContext mCallbackContext;
 
     public WetrackGeolocationPlugin() {
     }
