@@ -130,6 +130,7 @@ public class WetrackGeolocationPlugin extends CordovaPlugin {
         SharedPreferences.Editor iEditor = iSharedPreference.edit();
         iEditor.putString(UPLOAD_INFO , info.toString());
         iEditor.commit();
+        callbackContext.success("ok");
     }
 
     private void startUploader(CallbackContext callbackContext) {
