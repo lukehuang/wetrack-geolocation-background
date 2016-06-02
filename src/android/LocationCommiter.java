@@ -11,7 +11,7 @@ import org.json.JSONObject;
  * Created by zhonghui on 16/6/1.
  */
 public class LocationCommiter {
-    public static void commit(Location location , CallbackContext callbackContext , Context context) {
+    public static JSONObject commit(Location location , CallbackContext callbackContext , Context context) {
 
         JSONObject locationInfo = new JSONObject();
         try {
@@ -28,7 +28,8 @@ public class LocationCommiter {
             Toast.makeText(context , locationInfo.toString() , Toast.LENGTH_SHORT).show();
         }
 
-        Toast.makeText(context , locationInfo.toString() , Toast.LENGTH_SHORT).show();
+//        Toast.makeText(context , locationInfo.toString() , Toast.LENGTH_SHORT).show();
         callbackContext.success(locationInfo.toString());
+        return locationInfo;
     }
 }

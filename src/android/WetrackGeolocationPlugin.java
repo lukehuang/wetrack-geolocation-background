@@ -27,7 +27,8 @@ public class WetrackGeolocationPlugin extends CordovaPlugin {
     public static final String NEED_START_WATCH = "need_start_watch";
     public static final String NEED_UPLOAD = "need_upload";
     public static final String UPLOAD_INFO = "upload_info";
-    private CallbackContext mCallbackContext;
+    public static final String UPLOAD_STATE = "is_running";
+    private CallbackContext mWatchPositionCallbackContext;
 
     public WetrackGeolocationPlugin() {
     }
@@ -65,6 +66,22 @@ public class WetrackGeolocationPlugin extends CordovaPlugin {
             this.stopWatch(callbackContext);
             return true;
         }
+        if ("isWatchingPosition".equals(action)) {
+            this.isWatchingPosition(callbackContext);
+            return true;
+        }
+        if ("initUploader".equals(action)) {
+            this.initUploader(args.getString(0) , args.getString(1) , callbackContext);
+            return true;
+        }
+        if ("startUploader".equals(action)) {
+            this.startUploader(callbackContext);
+            return true;
+        }
+        if ("stopUploader".equals(action)) {
+            this.stopUploader(callbackContext);
+            return true;
+        }
         return false;  // Returning false results in a "MethodNotFound" error.
     }
 
@@ -80,7 +97,7 @@ public class WetrackGeolocationPlugin extends CordovaPlugin {
         SharedPreferences.Editor iEditor = iSharedPreference.edit();
         iEditor.putBoolean(NEED_START_WATCH , true);
         iEditor.commit();
-        mCallbackContext = callbackContext;
+        mWatchPositionCallbackContext = callbackContext;
         applicationContext.bindService(new Intent(applicationContext , GeolocationService.class) , mConnection , Context.BIND_AUTO_CREATE);
     }
 
@@ -93,13 +110,53 @@ public class WetrackGeolocationPlugin extends CordovaPlugin {
         applicationContext.unbindService(mConnection);
     }
 
+    private void isWatchingPosition(CallbackContext callbackContext) {
+        Context applicationContext = this.cordova.getActivity().getApplicationContext();
+        SharedPreferences iSharedPreference = applicationContext.getSharedPreferences(WetrackGeolocationPlugin.class.getSimpleName() , Context.MODE_PRIVATE);
+        boolean isWatching = iSharedPreference.getBoolean(NEED_START_WATCH , false);
+        callbackContext.success(isWatching);
+    }
+
+    private void initUploader(String url , String contentType , CallbackContext callbackContext) {
+        JSONObject info = new JSONObject();
+        try {
+            info.put("url" , url);
+            info.put("contentType" , contentType);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Context applicationContext = this.cordova.getActivity().getApplicationContext();
+        SharedPreferences iSharedPreference = applicationContext.getSharedPreferences(WetrackGeolocationPlugin.class.getSimpleName() , Context.MODE_PRIVATE);
+        SharedPreferences.Editor iEditor = iSharedPreference.edit();
+        iEditor.putString(UPLOAD_INFO , info.toString());
+        iEditor.commit();
+    }
+
+    private void startUploader(CallbackContext callbackContext) {
+        Context applicationContext = this.cordova.getActivity().getApplicationContext();
+        SharedPreferences iSharedPreference = applicationContext.getSharedPreferences(WetrackGeolocationPlugin.class.getSimpleName() , Context.MODE_PRIVATE);
+        SharedPreferences.Editor iEditor = iSharedPreference.edit();
+        iEditor.putBoolean(NEED_UPLOAD , true);
+        iEditor.commit();
+    }
+
+    private void stopUploader(CallbackContext callbackContext) {
+        Context applicationContext = this.cordova.getActivity().getApplicationContext();
+        SharedPreferences iSharedPreference = applicationContext.getSharedPreferences(WetrackGeolocationPlugin.class.getSimpleName() , Context.MODE_PRIVATE);
+        SharedPreferences.Editor iEditor = iSharedPreference.edit();
+        iEditor.putBoolean(NEED_UPLOAD , false);
+        iEditor.commit();
+    }
+
+
+
     private ServiceConnection mConnection = new ServiceConnection() {
 
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             GeolocationServiceBinder binder = (GeolocationServiceBinder) service;
             GeolocationService binderService = binder.getService();
-            binderService.setCallbackContext(mCallbackContext);
+            binderService.setWatchPositionCallbackContext(mWatchPositionCallbackContext);
         }
 
         @Override
