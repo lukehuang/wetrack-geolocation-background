@@ -27,6 +27,10 @@ WetrackGeolocation.prototype.watchPosition = function(callback) {
 WetrackGeolocation.prototype.stopWatch = function() {
     this.call_native("stopWatch", [] , null);
 }
+// 查看当前是否监听位置变化
+WetrackGeolocation.prototype.isWatchingPosition = function(callback) {
+    this.call_native("isWatchingPosition", [] , callback);
+}
 // 初始化上传：args解析满足以下格式。默认POST
 // {
 //     api : "" ,
@@ -35,17 +39,17 @@ WetrackGeolocation.prototype.stopWatch = function() {
 //     params : { key : val , ...}
 // }
 // TODO 分离方法来实现
-// WetrackGeolocation.prototype.initUploader = function(args , callback) {
-//     this.call_native("initUploader", args , callback);
-// }
-//
-// WetrackGeolocation.prototype.startUploader = function() {
-//     this.call_native("startUploader", [] , null);
-// }
-//
-// WetrackGeolocation.prototype.stopUploader = function() {
-//     this.call_native("stopUploader", [] , null);
-// }
+WetrackGeolocation.prototype.initUploader = function(url , contentType , callback) {
+    this.call_native("initUploader", [url , contentType] , callback);
+}
+
+WetrackGeolocation.prototype.startUploader = function() {
+    this.call_native("startUploader", [] , null);
+}
+
+WetrackGeolocation.prototype.stopUploader = function() {
+    this.call_native("stopUploader", [] , null);
+}
 
 if(!window.plugins) {
 	window.plugins = {};
