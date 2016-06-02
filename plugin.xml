@@ -40,10 +40,12 @@
 
         </config-file>
 
-        <source-file src="src/android/WakeReceiver.java" target-dir="src/studio/wetrack/geolocation"/>
-        <source-file src="src/android/GeolocationService.java" target-dir="src/studio/wetrack/geolocation"/>
         <source-file src="src/android/GeolocationManager.java" target-dir="src/studio/wetrack/geolocation"/>
+        <source-file src="src/android/GeolocationService.java" target-dir="src/studio/wetrack/geolocation"/>
+        <source-file src="src/android/HttpConnectionWithArgs.java" target-dir="src/studio/wetrack/geolocation"/>
         <source-file src="src/android/LocationCommiter.java" target-dir="src/studio/wetrack/geolocation"/>
+        <source-file src="src/android/UploadTask.java" target-dir="src/studio/wetrack/geolocation"/>
+        <source-file src="src/android/WakeReceiver.java" target-dir="src/studio/wetrack/geolocation"/>
         <source-file src="src/android/WetrackGeolocationPlugin.java" target-dir="src/studio/wetrack/geolocation"/>
 
     </platform>
