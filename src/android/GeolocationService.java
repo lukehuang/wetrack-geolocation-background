@@ -39,7 +39,7 @@ public class GeolocationService extends Service implements LocationListener , Ht
             uploadLocation();
         }
     };
-    private Timer mTimer = new Timer();
+    private Timer mTimer;
 
     public class GeolocationServiceBinder extends Binder {
 
@@ -105,14 +105,17 @@ public class GeolocationService extends Service implements LocationListener , Ht
         boolean needUpload = iSharedPreference.getBoolean(WetrackGeolocationPlugin.NEED_UPLOAD , false);
         SharedPreferences.Editor iEditor = iSharedPreference.edit();
         if(!needUpload) {
-            mTimer.cancel();
-            mTimerTask.cancel();
+            if(mTimer != null) {
+                mTimer.cancel();
+                mTimerTask.cancel();
+            }
             iEditor.putBoolean(WetrackGeolocationPlugin.UPLOAD_STATE , false);
             iEditor.commit();
             return;
         } else {
             boolean isRuning = iSharedPreference.getBoolean(WetrackGeolocationPlugin.UPLOAD_STATE , false);
             if(!isRuning) {
+                mTimer = new Timer();
                 mTimer.schedule(mTimerTask , 6000);
                 iEditor.putBoolean(WetrackGeolocationPlugin.UPLOAD_STATE , true);
                 iEditor.commit();
@@ -142,7 +145,7 @@ public class GeolocationService extends Service implements LocationListener , Ht
     @Override
     public void onSuccess(String result) {
         // mUploadPopsitionCallbackContext.success(result);
-        Toast.makeText(this , result + " , Post : " + mLocationList.get(0).toString() , Toast.LENGTH_SHORT).show();
+        // Toast.makeText(this , result + " , Post : " + mLocationList.get(0).toString() , Toast.LENGTH_SHORT).show();
         mLocationList.remove(0);
         if(mLocationList == null || mLocationList.size() == 0) {
             return;
@@ -152,6 +155,7 @@ public class GeolocationService extends Service implements LocationListener , Ht
 
     @Override
     public void onError(String result) {
+    // Toast.makeText(this , result , Toast.LENGTH_SHORT).show();
         uploadLocationNow(mLocationList.get(0));
     }
 

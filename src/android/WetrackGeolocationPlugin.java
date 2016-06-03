@@ -114,7 +114,7 @@ public class WetrackGeolocationPlugin extends CordovaPlugin {
         Context applicationContext = this.cordova.getActivity().getApplicationContext();
         SharedPreferences iSharedPreference = applicationContext.getSharedPreferences(WetrackGeolocationPlugin.class.getSimpleName() , Context.MODE_PRIVATE);
         boolean isWatching = iSharedPreference.getBoolean(NEED_START_WATCH , false);
-        callbackContext.success(isWatching);
+        callbackContext.success("" + isWatching);
     }
 
     private void initUploader(String url , String contentType , CallbackContext callbackContext) {
