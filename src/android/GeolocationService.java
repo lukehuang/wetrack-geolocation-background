@@ -131,7 +131,7 @@ public class GeolocationService extends Service implements LocationListener , Ht
         SharedPreferences iSharedPreference = this.getSharedPreferences(WetrackGeolocationPlugin.class.getSimpleName() , Context.MODE_PRIVATE);
         String info = iSharedPreference.getString(WetrackGeolocationPlugin.UPLOAD_INFO , "");
         if(info.equals("")) {
-            mUploadPopsitionCallbackContext.error("error , upload info is missing");
+            // mUploadPopsitionCallbackContext.error("error , upload info is missing");
             return;
         }
         UploadTask task = new UploadTask();
@@ -141,7 +141,7 @@ public class GeolocationService extends Service implements LocationListener , Ht
 
     @Override
     public void onSuccess(String result) {
-        mUploadPopsitionCallbackContext.success(result);
+        // mUploadPopsitionCallbackContext.success(result);
         Toast.makeText(this , result + " , Post : " + mLocationList.get(0).toString() , Toast.LENGTH_SHORT).show();
         mLocationList.remove(0);
         if(mLocationList == null || mLocationList.size() == 0) {
