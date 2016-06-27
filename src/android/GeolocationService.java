@@ -146,6 +146,9 @@ public class GeolocationService extends Service implements LocationListener , Ht
     public void onSuccess(String result) {
         // mUploadPopsitionCallbackContext.success(result);
         // Toast.makeText(this , result + " , Post : " + mLocationList.get(0).toString() , Toast.LENGTH_SHORT).show();
+        if(mLocationList == null || mLocationList.size() == 0) {
+            return;
+        }
         mLocationList.remove(0);
         if(mLocationList == null || mLocationList.size() == 0) {
             return;
